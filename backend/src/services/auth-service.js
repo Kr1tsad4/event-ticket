@@ -1,6 +1,7 @@
 const userService = require("../services/user-service");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const mailService = require("../services/mail-service");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const createError = require("http-errors");
@@ -15,19 +16,28 @@ const register = async (user) => {
 
   const newUser = await userService.create(user);
 
-  const token = jwt.sign({ email: newUser.email }, SECRET_KEY, {
-    expiresIn: "1h",
+  const token = jwt.sign(
+    { email: newUser.email },
+    { fullName: newUser.fullName },
+    SECRET_KEY,
+    {
+      expiresIn: "1h",
+    }
+  );
+  await mailService.sendMail({
+    to: email,
+    subject: "Verify your email",
+    text: `${process.env.FRONTEND_URL}/verify-email/?token=${token}`,
+    html: `<p>Click <a href="${process.env.FRONTEND_URL}/verify-email/?token=${token}">here</a> to verify your email.</p>`,
   });
- const newUserObj = newUser.toObject();
+
+  const newUserObj = newUser.toObject();
   delete newUserObj.__v;
   delete newUserObj.password;
-  delete newUser.createdAt;
-  delete newUser.updatedAt;
+  delete newUserObj.createdAt;
+  delete newUserObj.updatedAt;
 
-  return {
-    user: newUserObj,
-    token,
-  };
+  return newUserObj;
 };
 
 const login = async (email, password) => {
@@ -49,6 +59,6 @@ const login = async (email, password) => {
 };
 
 module.exports = {
-    register,
-    login
-}
+  register,
+  login,
+};
