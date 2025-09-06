@@ -1,18 +1,41 @@
-# Event Booking & Ticketing System (work in progress)
-## Authentication & User
-- สมัคร/ล็อกอิน 
-- Role: Admin (สร้าง/จัดการ event) / User (จองตั๋ว)
-- Profile: user สามารถดู history การจองได้
-## Event Management
-### Admin role
-- CRUD event (ชื่อ, วันเวลา, สถานที่, ราคา, จำนวนบัตร)
-- Upload รูป event
-- ดูจำนวนตั๋วที่ถูกจองแล้ว
-### User role
-- ดูรายการ event ทั้งหมด
-- ค้นหา/Filter (ตามวันที่, สถานที่, หมวดหมู่)
-- กดจองตั๋ว
-## Booking System
-- Book Ticket ตัดจำนวนตั๋วใน event
-- แสดง Booking Confirmation
-- Realtime update เมื่อบัตร sold out
+# 🎟️ Event Booking & Ticketing System (Work in Progress)
+
+A web application for managing events and booking tickets.  
+Supports both **Admin** (event management) and **User** (ticket booking) roles.
+
+---
+
+## 🔑 Authentication & User Management
+- User registration & login with role-based access (Admin / User).
+- Profile page with booking history for each user.
+- Role definitions:
+  - **Admin**: Create & manage events.
+  - **User**: Browse and book tickets.
+
+---
+
+## 🎤 Event Management
+### Admin Features
+- CRUD operations for events (title, date & time, location, price, ticket capacity).
+- Upload event images.
+- Track number of booked tickets in real time.
+
+### User Features
+- View a list of available events.
+- Search & filter events (by date, location, category).
+- View event details before booking.
+
+---
+
+## 🏷️ Booking System
+- Ticket booking with automatic deduction from event capacity.
+- Booking confirmation page.
+- Real-time updates when tickets are sold out.
+
+---
+
+## 🔮 Future Improvements
+- Email notifications for booking confirmation.
+- Payment integration.
+- QR code for digital ticket check-in.
+- Admin analytics dashboard.
