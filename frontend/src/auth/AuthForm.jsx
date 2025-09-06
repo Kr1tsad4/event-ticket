@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import InputField from "../components/InputField";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useContext } from "react";
+
 import {
   login,
   register,
   resendVerificationEmail,
 } from "../utils/fetchAuthUtils";
+import { AuthContext } from "../contexts/AuthContext";
 function AuthForm() {
   const navigator = useNavigate();
   const location = useLocation();
@@ -19,6 +22,8 @@ function AuthForm() {
   const [isResendVerificationEmail, setIsResendVerificationEmail] =
     useState(false);
   const [resendLoading, setResendLoading] = useState(false);
+  const { setUser,setToken } = useContext(AuthContext);
+  const [loginErrorMessage, setLoginErrorMessage] = useState("");
 
   const userData = {
     fullName: fullName,
@@ -38,6 +43,37 @@ function AuthForm() {
     setPassword("");
     navigator(isLoginPage ? "/register" : "/login");
   };
+  const signin = async () => {
+    setLoading(true);
+    setUser(null);
+    try {
+      const res = await login(userData);
+      if (res.message) {
+        setLoginErrorMessage(res.message);
+        return;
+      }
+      if (!res.user?.isVerified) {
+        setIsVerify(false);
+        return;
+      }
+
+      sessionStorage.setItem("login-user", JSON.stringify(res.user));
+      sessionStorage.setItem("access_token", res["access_token"]);
+      setUser(res.user);
+      setToken(res["access_token"])
+    
+
+      if (res.user.role === "admin") {
+        navigator("/admin");
+      } else {
+        navigator("/home");
+      }
+    } catch (err) {
+      console.error("Login error:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const signup = async () => {
     setLoading(true);
@@ -50,28 +86,10 @@ function AuthForm() {
       }
       if (newUser) {
         setIsVerify(false);
-        sessionStorage.setItem("signup-user", JSON.stringify(newUser));
+        localStorage.setItem("signup-user", JSON.stringify(newUser));
       }
     } catch (err) {
       console.error("Register error:", err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const signin = async () => {
-    setLoading(true);
-    try {
-      const res = await login(userData);
-      if (!res.user.isVerified) {
-        setIsVerify(false);
-        return;
-      }
-      sessionStorage.setItem("login-user", JSON.stringify(res.user));
-      console.log("in");
-      navigator("/home");
-    } catch (err) {
-      console.error("Login error:", err.message);
     } finally {
       setLoading(false);
     }
@@ -90,25 +108,9 @@ function AuthForm() {
       setResendLoading(false);
     }
   };
-  useEffect(() => {
-    const checkVerified = () => {
-      const verified = localStorage.getItem("email-verified");
-      if (verified === "true") {
-        localStorage.removeItem("email-verified");
-        setTimeout(() => {
-          navigator("/home");
-        }, 3000);
-      }
-    };
 
-    checkVerified();
-    window.addEventListener("storage", checkVerified);
-    return () => {
-      window.removeEventListener("storage", checkVerified);
-    };
-  }, [navigator]);
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white px-4">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 via-purple-500 px-4 text-white bg-">
       <div className="w-full max-w-md md:max-w-lg bg-black/70 flex flex-col justify-center gap-5 rounded-xl p-6 md:p-8">
         {!isVerify && (
           <div className="flex flex-col items-center">
@@ -170,7 +172,9 @@ function AuthForm() {
               handleInput={(e) => setPassword(e)}
               className="w-full"
             />
-
+            {loginErrorMessage && (
+              <p className="text-red-500 w-full text-sm">{loginErrorMessage}</p>
+            )}
             <div className="w-full mt-2 ">
               <p className="text-sm">
                 {isLoginPage

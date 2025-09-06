@@ -1,7 +1,7 @@
 function InputField({ type, placeholder, label, value, handleInput, className }) {
   return (
     <div className={`w-full ${className || ""}`}>
-      <label className="block mb-2 font-medium text-sm md:text-base">{label}</label>
+      <label className="block mb-2 font-medium text-sm md:text-base text-white">{label}</label>
       <input
         type={type}
         placeholder={placeholder}

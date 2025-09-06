@@ -8,27 +8,37 @@ import {
 import VerifyEmail from "./pages/VerifyEmail";
 import Homepage from "./pages/HomePage";
 import ProtectedRoute from "./auth/ProtectedRoute";
+import AdminPage from "./pages/AdminPage";
+import { EventProvider } from "./contexts/EventContext";
+
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-
-        <Route path="/register" element={<AuthForm />} />
-        <Route path="/login" element={<AuthForm />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute
-              user={JSON.parse(sessionStorage.getItem("login-user"))}
-            >
-              <Homepage />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </Router>
+    <EventProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/register" element={<AuthForm />} />
+          <Route path="/login" element={<AuthForm />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Homepage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </EventProvider>
   );
 }
 
