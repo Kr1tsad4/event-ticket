@@ -17,8 +17,7 @@ const register = async (user) => {
   const newUser = await userService.create(user);
 
   const token = jwt.sign(
-    { email: newUser.email },
-    { fullName: newUser.fullName },
+    { email: newUser.email, fullName: newUser.fullName },
     SECRET_KEY,
     {
       expiresIn: "1h",
@@ -27,8 +26,7 @@ const register = async (user) => {
   await mailService.sendMail({
     to: email,
     subject: "Verify your email",
-    text: `${process.env.FRONTEND_URL}/verify-email/?token=${token}`,
-    html: `<p>Click <a href="${process.env.FRONTEND_URL}/verify-email/?token=${token}">here</a> to verify your email.</p>`,
+    text: `Please verify your email by clicking this link:\n\n${process.env.FRONTEND_URL}/verify-email/?token=${token}`,
   });
 
   const newUserObj = newUser.toObject();
@@ -58,7 +56,52 @@ const login = async (email, password) => {
   return { user: userObj, token };
 };
 
+const resendVerificationEmail = async (email) => {
+  const user = await userService.findByEmail(email);
+  if (!user) {
+    throw createError(404, "User not found.");
+  }
+
+  if (user.isVerified) {
+    throw createError(400, "User is already verified.");
+  }
+
+  const token = jwt.sign(
+    { email: user.email, fullName: user.fullName },
+    SECRET_KEY,
+    { expiresIn: "1h" }
+  );
+
+  await mailService.sendMail({
+    to: email,
+    subject: "Verify your email (resend)",
+    text: `${process.env.FRONTEND_URL}/verify-email/?token=${token}`,
+    html: `<p>Click <a href="${process.env.FRONTEND_URL}/verify-email/?token=${token}">here</a> to verify your email.</p>`,
+  });
+
+  return { message: "Verification email resent successfully" };
+};
+
+const verifyEmail = async (token) => {
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+
+    const user = await userService.findByEmail(decoded.email);
+    if (!user) {
+      throw createError(404, "User not found.");
+    }
+    user.isVerified = true;
+    await user.save();
+
+    return { message: "Email verified successfully" };
+  } catch (err) {
+    throw createError(401, "Verification failed: " + err.message);
+  }
+};
+
 module.exports = {
   register,
   login,
+  verifyEmail,
+  resendVerificationEmail,
 };
