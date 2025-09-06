@@ -1,5 +1,10 @@
 import { createContext, useState, useEffect, useContext } from "react";
-import { deleteEventById, getEvents } from "../utils/fetchEventUtils";
+import {
+  createEvent,
+  deleteEventById,
+  getEvents,
+  updateEvent,
+} from "../utils/fetchEventUtils";
 
 const EventContext = createContext();
 
@@ -17,13 +22,12 @@ export const EventProvider = ({ children }) => {
           const endDate = e.endDateTime.split("T")[0];
           const time = e.startDateTime.split("T")[1].slice(0, 5);
           const ticketsAvailable = e.ticketCapacity - e.ticketBooked;
-          const end = Number(endDate.slice(8, 10)) - Number(date.slice(8, 10));
-          const endIn = end > 0 ? end : "end";
+
           return {
             ...e,
             date,
             time,
-            endIn,
+            endDate,
             ticketsAvailable,
           };
         });
@@ -36,11 +40,25 @@ export const EventProvider = ({ children }) => {
     }
   };
 
+  const addEvent = async (event, token) => {
+    console.log(event);
+    const createdEvent = await createEvent(event, token);
+    if (createdEvent) {
+      setEvents((prev) => [...prev, createdEvent]);
+    }
+    fetchEvents();
+  };
   const deleteEvent = async (id, token) => {
-    console.log(token);
     const deletedEvent = await deleteEventById(id, token);
     if (deletedEvent) {
       setEvents((prev) => prev.filter((e) => e._id !== id));
+    }
+  };
+
+  const editEvent = async (id, event, token) => {
+    const updatedEvent = await updateEvent(id, event, token);
+    if (updatedEvent) {
+      fetchEvents();
     }
   };
   useEffect(() => {
@@ -48,7 +66,9 @@ export const EventProvider = ({ children }) => {
   }, []);
 
   return (
-    <EventContext.Provider value={{ events, fetchEvents, loading ,deleteEvent}}>
+    <EventContext.Provider
+      value={{ events, fetchEvents, loading, deleteEvent, addEvent, editEvent }}
+    >
       {children}
     </EventContext.Provider>
   );

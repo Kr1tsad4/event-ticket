@@ -21,7 +21,7 @@ function App() {
           <Route path="/login" element={<AuthForm />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route
-            path="/home"
+            path="/events"
             element={
               <ProtectedRoute>
                 <Homepage />
@@ -30,6 +30,22 @@ function App() {
           />
           <Route
             path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/event/add"
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/event/edit/:id"
             element={
               <ProtectedRoute>
                 <AdminPage />

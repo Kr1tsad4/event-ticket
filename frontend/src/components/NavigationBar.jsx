@@ -6,6 +6,7 @@ function NavigationBar() {
   const navigator = useNavigate();
   const location = useLocation();
   const isAdminPage = location.pathname.includes("/admin");
+  const isHomePage = location.pathname.includes("/events");
   if (!user) return null;
 
   const logout = () => {
@@ -22,22 +23,28 @@ function NavigationBar() {
         <h1 className="font-bold text-xl">
           {isAdminPage ? "Admin Dashboard" : "Event Booking & Ticketing"}
         </h1>
-        <div>
-          <ul className="flex gap-8 pr-2">
-            {user?.role === "admin" && isAdminPage && (
-              <button
-                onClick={() => navigator("/home")}
-                className="cursor-pointer"
-              >
-                <li>Home</li>
-              </button>
-            )}
-            <li>Events</li>
-            <li>Profile</li>
-            <button onClick={logout} className="cursor-pointer">
-              <li>Logout</li>
+        <div className="flex gap-8 pr-2">
+          <button
+            onClick={() => navigator("/events")}
+            className="cursor-pointer"
+          >
+            <p className={isHomePage ? "font-bold" : ""}>Events</p>
+          </button>
+
+          {user?.role === "admin" && (
+            <button
+              onClick={() => navigator("/admin")}
+              className="cursor-pointer"
+            >
+              <p className={isAdminPage ? "font-bold" : ""}>Dashboard</p>
             </button>
-          </ul>
+          )}
+          <button>
+            <p>Profile</p>
+          </button>
+          <button onClick={logout} className="cursor-pointer">
+            <p>Logout</p>
+          </button>
         </div>
       </div>
     </div>

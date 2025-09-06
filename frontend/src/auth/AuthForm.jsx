@@ -66,7 +66,7 @@ function AuthForm() {
       if (res.user.role === "admin") {
         navigator("/admin");
       } else {
-        navigator("/home");
+        navigator("/events");
       }
     } catch (err) {
       console.error("Login error:", err.message);

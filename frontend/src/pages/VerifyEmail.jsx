@@ -24,7 +24,7 @@ function VerifyEmail() {
         }
 
         setTimeout(() => {
-          navigate("/home");
+          navigate("/events");
         }, 1000);
       } catch (err) {
         setMessage(err.message);
