@@ -6,19 +6,18 @@ Supports both **Admin** (event management) and **User** (ticket booking) roles.
 ---
 
 ## 🔑 Authentication & User Management
-- User registration & login with role-based access (Admin / User).
+- User registration & login with role-based access (Admin / User). :white_check_mark: 
 - Profile page with booking history for each user.
 - Role definitions:
-  - **Admin**: Create & manage events.
+  - **Admin**: Create & manage events. 
   - **User**: Browse and book tickets.
 
 ---
 
 ## 🎤 Event Management
 ### Admin Features
-- CRUD operations for events (title, date & time, location, price, ticket capacity).
-- Upload event images.
-- Track number of booked tickets in real time.
+- CRUD operations for events (title, date & time, location, price, ticket capacity). :white_check_mark: 
+- Track number of booked tickets in real time. 
 
 ### User Features
 - View a list of available events.
