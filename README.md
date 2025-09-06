@@ -34,6 +34,15 @@ Supports both **Admin** (event management) and **User** (ticket booking) roles.
 
 ---
 
+## 🛠 Tech Stack
+- **Frontend**: React + Tailwind CSS  
+- **Backend**: Node.js (Express.js)  
+- **Database**: MongoDB
+- **Authentication**: JWT  
+- **Realtime**: Socket.IO 
+
+---
+
 ## 🔮 Future Improvements
 - Email notifications for booking confirmation.
 - Payment integration.
