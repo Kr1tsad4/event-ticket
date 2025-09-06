@@ -20,13 +20,14 @@ const findByEmail = async (email) => {
 };
 
 const create = async (user) => {
-  const { fullName, email, password } = user;
+  const { fullName, email, password,role } = user;
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   const newUser = await User.create({
     fullName,
     email,
     password: hashedPassword,
+    role:role
   });
 
   const newUserObj = newUser.toObject();

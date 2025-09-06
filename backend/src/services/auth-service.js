@@ -17,7 +17,7 @@ const register = async (user) => {
   const newUser = await userService.create(user);
 
   const token = jwt.sign(
-    { email: newUser.email, fullName: newUser.fullName },
+    { email: newUser.email, fullName: newUser.fullName, role: newUser.role },
     SECRET_KEY,
     {
       expiresIn: "1h",
@@ -48,12 +48,26 @@ const login = async (email, password) => {
     throw createError(401, "Email or password is incorrect.");
   }
 
-  const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: "1h" });
+  const accessToken = jwt.sign(
+    { id: user._id, email: user.email, role: user.role },
+    SECRET_KEY,
+    { expiresIn: "30m" }
+  );
+
+  const refreshToken = jwt.sign(
+    { id: user._id, email: user.email, role: user.role },
+    SECRET_KEY,
+    { expiresIn: "7d" }
+  );
   const userObj = user.toObject();
   delete userObj.__v;
   delete userObj.password;
 
-  return { user: userObj, token };
+  return {
+    user: userObj,
+    access_token: accessToken,
+    refresh_token: refreshToken,
+  };
 };
 
 const resendVerificationEmail = async (email) => {
@@ -67,7 +81,7 @@ const resendVerificationEmail = async (email) => {
   }
 
   const token = jwt.sign(
-    { email: user.email, fullName: user.fullName },
+    { email: user.email, fullName: user.fullName, role: user.role },
     SECRET_KEY,
     { expiresIn: "1h" }
   );
