@@ -16,9 +16,20 @@ const createEvent = asyncHandler(async (req, res) => {
   return res.status(201).json(newEvent);
 });
 
+const updateEvent = asyncHandler(async (req, res) => {
+  const updatedEvent = await eventService.update(req.body, req.params.id);
+  return res.status(200).json(updatedEvent);
+});
+
 const deleteEvent = asyncHandler(async (req, res) => {
   await eventService.deleteById(req.params.id);
   return res.status(204).json({ message: "Event deleted successfully." });
 });
 
-module.exports = { getEvents, getEventById, createEvent, deleteEvent };
+module.exports = {
+  getEvents,
+  getEventById,
+  createEvent,
+  deleteEvent,
+  updateEvent,
+};
