@@ -105,9 +105,9 @@ function EventListPage() {
           </button>
           <button
             onClick={clearFilter}
-            className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+            className="px-4 py-2 btn btn-error text-white rounded-md hover:bg-gray-600"
           >
-            clear
+            Clear
           </button>
         </div>
         {isSearching && <p className="text-gray-500 mb-3">Found {filteredEvents.length} event(s)</p>}

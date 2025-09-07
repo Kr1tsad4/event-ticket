@@ -182,7 +182,7 @@ function AdminPage() {
               <tr>
                 <th className=" px-2 py-3">Title</th>
                 <th className=" px-4 py-2">Location</th>
-                <th className=" px-2 py-2">Date</th>
+                <th className=" px-2 py-2">Start Date</th>
                 <th className=" px-2 py-2">End Date</th>
                 <th className=" px-2 py-2">Time</th>
                 <th className=" px-[2px] py-2">Tickets</th>
