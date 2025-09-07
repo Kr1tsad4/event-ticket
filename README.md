@@ -20,8 +20,8 @@ Supports both **Admin** (event management) and **User** (ticket booking) roles.
 - Track number of booked tickets in real time. 
 
 ### User Features
-- View a list of available events.
-- Search & filter events (by date, location, category).
+- View a list of available events. :white_check_mark: 
+- Search & filter events (by date, location, category). :white_check_mark: 
 - View event details before booking.
 
 ---
