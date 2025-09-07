@@ -18,7 +18,8 @@ function EventForm({
   startTime,
   endTime,
   startDate,
-  endDate
+  endDate,
+  enableAddButton,
 }) {
   const navigator = useNavigate();
 
@@ -31,7 +32,7 @@ function EventForm({
           <InputField
             type="text"
             placeholder="Enter title"
-            label="Title"
+            label="Title *"
             value={eventData.title}
             handleInput={(e) => setTitle(e)}
           />
@@ -45,19 +46,19 @@ function EventForm({
           <InputField
             type="text"
             placeholder="Enter location"
-            label="Location"
+            label="Location *"
             value={eventData.location}
             handleInput={(e) => setLocation(e)}
           />
           <div className="flex gap-1">
             <InputField
-              label="Start Date"
+              label="Start Date *"
               type="date"
               value={startDate}
               handleInput={(e) => setStartDate(e)}
             />
             <InputField
-              label="End Date"
+              label="End Date *"
               type="date"
               value={endDate}
               handleInput={(e) => setEndDate(e)}
@@ -65,13 +66,13 @@ function EventForm({
           </div>
           <div className="flex gap-1">
             <InputField
-              label="Start Time"
+              label="Start Time *"
               type="time"
               value={startTime}
               handleInput={(e) => setStartTime(e)}
             />
             <InputField
-              label="End Time"
+              label="End Time *"
               type="time"
               value={endTime}
               handleInput={(e) => setEndTime(e)}
@@ -80,14 +81,14 @@ function EventForm({
           <div className="flex gap-1">
             <InputField
               type="Number"
-              label="Price"
+              label="Price *"
               placeholder="Enter price"
               value={eventData.price}
               handleInput={(e) => setPrice(e)}
             />
             <InputField
               type="Number"
-              label="Number of tickets"
+              label="Number of tickets *"
               placeholder="Enter amount of ticket"
               value={eventData.ticketCapacity}
               handleInput={(e) => setTicketCapacity(e)}
@@ -96,13 +97,14 @@ function EventForm({
         </div>
 
         <div className="flex gap-2 mt-5 w-full">
-          <button
-            className="btn btn-error flex-1"
-            onClick={() => cancel()}
-          >
+          <button className="btn btn-error flex-1" onClick={() => cancel()}>
             Cancel
           </button>
-          <button className="btn btn-primary flex-1" onClick={() => save()}>
+          <button
+            className="btn btn-primary flex-1"
+            onClick={() => save()}
+            disabled={!enableAddButton()}
+          >
             Save
           </button>
         </div>

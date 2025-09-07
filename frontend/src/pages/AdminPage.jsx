@@ -24,6 +24,9 @@ function AdminPage() {
   const [price, setPrice] = useState(null);
   const [ticketCapacity, setTicketCapacity] = useState(null);
   const [idToEdit, setIdToEdit] = useState(null);
+  const [eventToDelete, setEventToDelete] = useState(null);
+  const [isOpenDeleteConfirmation, setIsOpenDeleteConfirmation] =
+    useState(false);
   if (loading) {
     return <div>Loading events...</div>;
   }
@@ -62,7 +65,7 @@ function AdminPage() {
 
   const openEditForm = async (id) => {
     navigator(`/admin/event/edit/${id}`);
-    setIdToEdit(id)
+    setIdToEdit(id);
     try {
       const event = await getEventById(id);
 
@@ -89,12 +92,28 @@ function AdminPage() {
     navigator("/admin");
   };
 
+  const openDeleteConfirmationPopup = (id, title) => {
+    setEventToDelete({ id: id, title: title });
+    setIsOpenDeleteConfirmation(true);
+  };
+
+  const enableAddButton = () => {
+    return (
+      !!title &&
+      !!location &&
+      !!startDate &&
+      !!endDate &&
+      !!startTime &&
+      !!endTime &&
+      !!price
+    );
+  };
   return (
-    <div>
+    <div className="bg-white text-black h-screen pt-20">
       <NavigationBar />
-      <div className="relative">
+      <div className="relative bg-white">
         <div className="m-10">
-          <h1 className="text-2xl font-bold mb-5">Admin Dashboard</h1>
+          <h1 className="text-2xl font-bold mb-5">Dashboard</h1>
         </div>
         {(isOpenAddForm || isOpenEditForm) && (
           <div className="fixed inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm z-50">
@@ -115,9 +134,41 @@ function AdminPage() {
               startDate={startDate}
               endTime={endTime}
               endDate={endDate}
+              enableAddButton={enableAddButton}
             />
           </div>
         )}
+        {isOpenDeleteConfirmation && (
+          <div className="fixed inset-0 flex justify-center items-center bg-black/50 backdrop-blur-[3px] z-50">
+            <div className="bg-white w-auto p-5 rounded-xl">
+              <h1 className="font-bold text-xl">Delete Confirmation</h1>
+              <p className="pb-5 pt-4">
+                Are you sure you want to delete {eventToDelete?.title} event ?
+              </p>
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={() => {
+                    setIsOpenDeleteConfirmation(false);
+                    setEventToDelete(null);
+                  }}
+                  className="btn bg-gray-400 text-black border-0"
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-error"
+                  onClick={() => {
+                    deleteEvent(eventToDelete.id, token);
+                    setIsOpenDeleteConfirmation(false);
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="m-10">
           <h1 className="text-2xl font-bold mb-5">Event Management</h1>
           <button
@@ -165,7 +216,9 @@ function AdminPage() {
                       </button>
                       <button
                         className="btn btn-sm btn-error text-white"
-                        onClick={() => deleteEvent(event._id, token)}
+                        onClick={() =>
+                          openDeleteConfirmationPopup(event._id, event.title)
+                        }
                       >
                         Delete
                       </button>
@@ -174,7 +227,7 @@ function AdminPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="text-center py-5">
+                  <td colSpan={7} className="text-center w-full py-5 ">
                     No events found
                   </td>
                 </tr>

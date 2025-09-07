@@ -19,7 +19,7 @@ function NavigationBar() {
 
   return (
     <div>
-      <div className="flex justify-between p-6 shadow-2xl bg-white text-black">
+      <div className="flex justify-between p-6 shadow-md bg-white text-black fixed top-0 w-full z-50">
         <h1 className="font-bold text-xl">
           {isAdminPage ? "Admin Dashboard" : "Event Booking & Ticketing"}
         </h1>

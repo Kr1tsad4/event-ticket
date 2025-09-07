@@ -74,8 +74,7 @@ const deleteEventById = async (id, token) => {
       throw new Error(err.message || "Cannot delete event");
     }
 
-    const res = await data.json();
-    return res;
+    return data.status;
   } catch (e) {
     throw new Error(`Cannot delete event: ${e.message}`);
   }

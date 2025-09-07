@@ -6,7 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import VerifyEmail from "./pages/VerifyEmail";
-import Homepage from "./pages/HomePage";
+import EventListPage from "./pages/EventListPage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import AdminPage from "./pages/AdminPage";
 import { EventProvider } from "./contexts/EventContext";
@@ -24,7 +24,7 @@ function App() {
             path="/events"
             element={
               <ProtectedRoute>
-                <Homepage />
+                <EventListPage />
               </ProtectedRoute>
             }
           />

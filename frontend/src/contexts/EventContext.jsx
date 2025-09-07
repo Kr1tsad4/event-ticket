@@ -18,16 +18,40 @@ export const EventProvider = ({ children }) => {
       const res = await getEvents();
       if (res) {
         const eventsWithDateTime = res.map((e) => {
-          const date = e.startDateTime.split("T")[0];
-          const endDate = e.endDateTime.split("T")[0];
-          const time = e.startDateTime.split("T")[1].slice(0, 5);
-          const ticketsAvailable = e.ticketCapacity - e.ticketBooked;
+          const plainDate = e.startDateTime.split("T")[0];
+          const start = new Date(plainDate + "T00:00:00");
+          const end = new Date(e.endDateTime);
+          const date = start.toLocaleDateString("en-US", {
+            timeZone: "Asia/Bangkok",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
 
+          const endDate = end.toLocaleDateString("en-US", {
+            timeZone: "Asia/Bangkok",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+
+          const time = `${start.toLocaleTimeString("en-US", {
+            timeZone: "Asia/Bangkok",
+            hour: "2-digit",
+            minute: "2-digit",
+          })} - ${end.toLocaleTimeString("en-US", {
+            timeZone: "Asia/Bangkok",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`;
+
+          const ticketsAvailable = e.ticketCapacity - e.ticketBooked;
           return {
             ...e,
             date,
-            time,
             endDate,
+            plainDate,
+            time,
             ticketsAvailable,
           };
         });
