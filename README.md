@@ -17,19 +17,19 @@ Supports both **Admin** (event management) and **User** (ticket booking) roles.
 ## 🎤 Event Management
 ### Admin Features
 - CRUD operations for events (title, date & time, location, price, ticket capacity). :white_check_mark: 
-- Track number of booked tickets in real time. 
+- Track number of booked tickets in real time. :white_check_mark: 
 
 ### User Features
 - View a list of available events. :white_check_mark: 
 - Search & filter events (by date, location, category). :white_check_mark: 
-- View event details before booking.
+- View event details before booking. :white_check_mark:  
 
 ---
 
 ## 🏷️ Booking System
-- Ticket booking with automatic deduction from event capacity.
-- Booking confirmation page.
-- Real-time updates when tickets are sold out.
+- Ticket booking with automatic deduction from event capacity. :white_check_mark: 
+- Booking confirmation. :white_check_mark: 
+- Real-time updates when tickets are sold out. :white_check_mark: 
 
 ---
 
