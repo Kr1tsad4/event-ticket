@@ -26,10 +26,16 @@ const deleteEvent = asyncHandler(async (req, res) => {
   return res.status(204).json({ message: "Event deleted successfully." });
 });
 
+const bookEventTicket = asyncHandler(async (req, res) => {
+  const { eventId, userId } = req.body;
+  const bookedTicket = await eventService.bookTicket(eventId, userId);
+  return res.status(201).json({ message: "Booked ticket successfully.",ticket:bookedTicket });
+});
 module.exports = {
   getEvents,
   getEventById,
   createEvent,
   deleteEvent,
   updateEvent,
+  bookEventTicket
 };

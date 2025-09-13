@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const createError = require("http-errors");
 
 const findAll = async () => {
-  return await User.find().select("-__v");
+  return await User.find().select("-__v -password");
 };
 
 const findById = async (id) => {
