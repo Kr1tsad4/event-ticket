@@ -5,6 +5,8 @@ import {
   getEvents,
   updateEvent,
 } from "../utils/fetchEventUtils";
+import socket from "../socket";
+import { useCallback } from "react";
 
 const EventContext = createContext();
 
@@ -12,7 +14,7 @@ export const EventProvider = ({ children }) => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     setLoading(true);
     try {
       const res = await getEvents();
@@ -46,6 +48,7 @@ export const EventProvider = ({ children }) => {
           })}`;
 
           const ticketsAvailable = e.ticketCapacity - e.ticketBooked;
+          const isSoldOut = e.ticketCapacity - e.ticketBooked <= 0;
           return {
             ...e,
             date,
@@ -53,6 +56,7 @@ export const EventProvider = ({ children }) => {
             plainDate,
             time,
             ticketsAvailable,
+            isSoldOut,
           };
         });
         setEvents(eventsWithDateTime);
@@ -62,7 +66,7 @@ export const EventProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const addEvent = async (event, token) => {
     console.log(event);
@@ -85,13 +89,40 @@ export const EventProvider = ({ children }) => {
       fetchEvents();
     }
   };
+  const bookTicket = async (eventId, userId, quantity) => {
+    socket.emit("book", {
+      eventId: eventId,
+      userId: userId,
+      quantity: quantity,
+    });
+  };
+
+  useEffect(() => {
+    const handleBookedTicket = () => {
+      fetchEvents();
+    };
+
+    socket.on("booked-ticket", handleBookedTicket);
+    return () => {
+      socket.off("booked-ticket", handleBookedTicket);
+    };
+  }, []);
+
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [fetchEvents]);
 
   return (
     <EventContext.Provider
-      value={{ events, fetchEvents, loading, deleteEvent, addEvent, editEvent }}
+      value={{
+        events,
+        fetchEvents,
+        loading,
+        deleteEvent,
+        addEvent,
+        editEvent,
+        bookTicket,
+      }}
     >
       {children}
     </EventContext.Provider>

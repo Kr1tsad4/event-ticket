@@ -1,4 +1,4 @@
-function EventList({ events, views }) {
+function EventList({ events, views, openConfirmBooking }) {
   if (events.length === 0) {
     return (
       <div className="text-center text-gray-500 mt-10">
@@ -11,7 +11,7 @@ function EventList({ events, views }) {
       {events.map((event) => (
         <div key={event._id}>
           {views === "list" && (
-            <div className="border border-gray-300 shadow p-5 mb-5 flex justify-between items-center rounded-xl">
+            <div className="border border-gray-300 shadow p-5 mb-5 flex justify-between items-center rounded-xl relative">
               <div>
                 <h1 className="text-2xl font-bold pb-2">{event.title}</h1>
                 <p className="text-sm text-gray-600">
@@ -26,9 +26,21 @@ function EventList({ events, views }) {
                 </p>
               </div>
               <div>
-                <button className="btn btn-primary rounded-xl px-6">
-                  Book Ticket
-                </button>
+                {!event.isSoldOut && (
+                  <button
+                    onClick={() => openConfirmBooking(event._id)}
+                    className="btn btn-primary rounded-xl px-6"
+                  >
+                    Book Ticket
+                  </button>
+                )}
+                {event.isSoldOut && (
+                  <h1
+                    className="text-red-500 font-bold text-xl rounded-md py-2 px-4 border-dashed border-2"
+                  >
+                    Sold Out
+                  </h1>
+                )}
               </div>
             </div>
           )}

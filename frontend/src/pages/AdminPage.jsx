@@ -30,6 +30,7 @@ function AdminPage() {
   if (loading) {
     return <div>Loading events...</div>;
   }
+  
   let eventData = {
     title: title,
     description: description,
@@ -108,6 +109,7 @@ function AdminPage() {
       !!price
     );
   };
+  
   return (
     <div className="bg-white text-black h-screen pt-20">
       <NavigationBar />

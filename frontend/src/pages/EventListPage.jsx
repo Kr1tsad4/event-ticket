@@ -2,9 +2,14 @@ import { useEvents } from "../contexts/EventContext";
 import NavigationBar from "../components/NavigationBar";
 import EventList from "../components/EventList";
 import { useEffect, useState } from "react";
+import { getEventById } from "../utils/fetchEventUtils";
+import { useNavigate } from "react-router-dom";
+import BookingConfirmationModal from "../components/BookingConfirmationModal";
+import { AuthContext } from "../contexts/AuthContext";
+import { useContext } from "react";
 
 function EventListPage() {
-  const { events } = useEvents();
+  const { events, bookTicket } = useEvents();
   const [searchValues, setSearchValues] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [filterMinPrice, setFilterMinPrice] = useState(null);
@@ -12,6 +17,8 @@ function EventListPage() {
   const [filterDate, setFilterDate] = useState(null);
   const [filterLocation, setFilterLocation] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const navigator = useNavigate();
+  const { user } = useContext(AuthContext);
 
   const handleSearch = () => {
     const result = events.filter((e) => {
@@ -55,6 +62,19 @@ function EventListPage() {
     setFilterLocation("");
     setIsSearching(false);
   };
+  const [eventTicketToBook, setEventTicketToBook] = useState(null);
+  const openConfirmBooking = async (eventId) => {
+    const event = await getEventById(eventId);
+    if (event) {
+      setEventTicketToBook(event);
+    }
+  };
+
+  const confirmBookTicket = async (eventId,quantity) => {
+    await bookTicket(eventId, user._id,quantity);
+    setEventTicketToBook(null);
+  };
+
   return (
     <div className="bg-white min-h-screen text-black pb-15 pt-20">
       <NavigationBar />
@@ -71,20 +91,20 @@ function EventListPage() {
           <input
             type="Number"
             placeholder="Price lower"
-            value={filterMinPrice}
+            value={filterMinPrice ?? ""}
             onChange={(e) => setFilterMinPrice(e.target.value)}
             className="w-1/8 px-4 py-2 border bg-gray-300 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="Number"
             placeholder="Price upper"
-            value={filterMaxPrice}
+            value={filterMaxPrice ?? ""}
             onChange={(e) => setFilterMaxPrice(e.target.value)}
             className="w-1/8  px-4 py-2 border bg-gray-300 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="Date"
-            value={filterDate}
+            value={filterDate ?? ""}
             onChange={(e) => setFilterDate(e.target.value)}
             className="w-1/8 bg-gray-300  px-4 py-2 border text-gray-500 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
           />
@@ -110,11 +130,25 @@ function EventListPage() {
             Clear
           </button>
         </div>
-        {isSearching && <p className="text-gray-500 mb-3">Found {filteredEvents.length} event(s)</p>}
+        {isSearching && (
+          <p className="text-gray-500 mb-3">
+            Found {filteredEvents.length} event(s)
+          </p>
+        )}
         <EventList
           events={isSearching ? filteredEvents : events}
           views="list"
+          openConfirmBooking={openConfirmBooking}
         />
+        {eventTicketToBook && (
+          <div className="fixed inset-0 flex justify-center items-center bg-black/20 backdrop-blur-[3px] z-50">
+            <BookingConfirmationModal
+              eventTicketToBook={eventTicketToBook}
+              setEventTicketToBook={setEventTicketToBook}
+              confirmBookTicket={confirmBookTicket}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

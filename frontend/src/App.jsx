@@ -10,6 +10,7 @@ import EventListPage from "./pages/EventListPage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import AdminPage from "./pages/AdminPage";
 import { EventProvider } from "./contexts/EventContext";
+import BookingConfirmationModal from "./components/BookingConfirmationModal";
 
 function App() {
   return (
