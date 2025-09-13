@@ -23,6 +23,7 @@ const login = async (user) => {
       headers: {
         "content-type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         ...user,
       }),
@@ -33,6 +34,22 @@ const login = async (user) => {
     throw new Error("can not login");
   }
 };
+
+const logout = async () => {
+  try {
+    const res = await fetch(`${API_URL}/auth/logout`, {
+      method: "POST",
+      credentials: "include", 
+    });
+
+    if (!res.ok) throw new Error("Logout failed");
+
+    return await res.json(); 
+  } catch (err) {
+    throw new Error(err.message || "Cannot logout");
+  }
+};
+
 const resendVerificationEmail = async (email) => {
   try {
     const res = await fetch(`${API_URL}/auth/resend-verification`, {
@@ -54,7 +71,7 @@ const verifyEmail = async (token) => {
     const res = await fetch(`${API_URL}/auth/verify-email`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token }), 
+      body: JSON.stringify({ token }),
     });
 
     if (!res.ok) throw new Error("Email verification failed");
@@ -65,4 +82,16 @@ const verifyEmail = async (token) => {
   }
 };
 
-export { register, login, resendVerificationEmail,verifyEmail };
+const refreshToken = async () => {
+  try {
+    const refreshRes = await fetch(`${API_URL}/auth/refresh-token`, {
+      method: "POST",
+      credentials: "include",
+    });
+
+    return { newToken: refreshRes, status: refreshRes.status };
+  } catch (err) {
+    throw new Error("Failed to refresh token");
+  }
+};
+export { register, login, resendVerificationEmail, verifyEmail, refreshToken ,logout};

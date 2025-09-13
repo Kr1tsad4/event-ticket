@@ -18,7 +18,6 @@ function AdminPage() {
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [price, setPrice] = useState(null);
@@ -36,7 +35,7 @@ function AdminPage() {
     description: description,
     location: location,
     startDateTime: `${startDate}T${startTime}:00Z`,
-    endDateTime: `${endDate}T${endTime}:00Z`,
+    endDateTime: `${startDate}T${endTime}:00Z`,
     price: price,
     ticketCapacity: ticketCapacity,
   };
@@ -46,7 +45,6 @@ function AdminPage() {
     setDescription("");
     setLocation("");
     setStartDate("");
-    setEndDate("");
     setStartTime("");
     setEndTime("");
     setPrice(null);
@@ -54,7 +52,6 @@ function AdminPage() {
   };
 
   const save = async () => {
-    console.log(eventData);
     if (locations.pathname.includes("/edit")) {
       await editEvent(idToEdit, eventData, token);
     } else if (locations.pathname.includes("/add")) {
@@ -71,14 +68,12 @@ function AdminPage() {
       const event = await getEventById(id);
 
       const startDate = `${event.startDateTime.split("T")[0]}`;
-      const endDate = event.endDateTime.split("T")[0];
       const startTime = event.startDateTime.split("T")[1].slice(0, 5);
       const endTime = event.endDateTime.split("T")[1].slice(0, 5);
       setTitle(event.title);
       setDescription(event.description);
       setLocation(event.location);
       setStartDate(startDate);
-      setEndDate(endDate);
       setStartTime(startTime);
       setEndTime(endTime);
       setPrice(event.price);
@@ -103,7 +98,6 @@ function AdminPage() {
       !!title &&
       !!location &&
       !!startDate &&
-      !!endDate &&
       !!startTime &&
       !!endTime &&
       !!price
@@ -127,7 +121,6 @@ function AdminPage() {
               setDescription={setDescription}
               setLocation={setLocation}
               setStartDate={setStartDate}
-              setEndDate={setEndDate}
               setStartTime={setStartTime}
               setEndTime={setEndTime}
               setPrice={setPrice}
@@ -135,7 +128,6 @@ function AdminPage() {
               startTime={startTime}
               startDate={startDate}
               endTime={endTime}
-              endDate={endDate}
               enableAddButton={enableAddButton}
             />
           </div>
@@ -184,8 +176,7 @@ function AdminPage() {
               <tr>
                 <th className=" px-2 py-3">Title</th>
                 <th className=" px-4 py-2">Location</th>
-                <th className=" px-2 py-2">Start Date</th>
-                <th className=" px-2 py-2">End Date</th>
+                <th className=" px-2 py-2">Date</th>
                 <th className=" px-2 py-2">Time</th>
                 <th className=" px-[2px] py-2">Tickets</th>
                 <th className="  py-2">Booked</th>
@@ -202,7 +193,6 @@ function AdminPage() {
                     <td className="px-2 py-2">{event.title}</td>
                     <td className="px-4 py-2">{event.location}</td>
                     <td className="px-2 py-2">{event.date}</td>
-                    <td className="px-4 py-2">{event.endDate}</td>
                     <td className="px-2 py-2">{event.time}</td>
                     <td className="py-2">{event.ticketCapacity}</td>
                     <td className="py-2">{event.ticketBooked}</td>

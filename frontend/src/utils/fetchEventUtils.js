@@ -32,16 +32,8 @@ const createEvent = async (event, token) => {
       body: JSON.stringify(event),
     });
 
-    if (!res.ok) {
-      if (res.status === 401) {
-        throw new Error("Unauthorized: Access token expired");
-      }
-      const err = await res.json();
-      throw new Error(err.message || "Cannot create event");
-    }
-
     const createdEvent = await res.json();
-    return createdEvent;
+    return { createdEvent, status: res.status };
   } catch (e) {
     throw new Error(`Cannot create event: ${e.message}`);
   }
@@ -58,16 +50,8 @@ const updateEvent = async (id, updateEvent, token) => {
       body: JSON.stringify(updateEvent),
     });
 
-    if (!res.ok) {
-      if (res.status === 401) {
-        throw new Error("Unauthorized: Access token expired");
-      }
-      const err = await res.json();
-      throw new Error(err.message || "Cannot update event");
-    }
-
     const updatedEvent = await res.json();
-    return updatedEvent;
+    return { updatedEvent, status: res.status };
   } catch (e) {
     throw new Error(`Cannot update event: ${e.message}`);
   }
@@ -80,15 +64,7 @@ const deleteEventById = async (id, token) => {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    if (!res.ok) {
-      if (res.status === 401) {
-        throw new Error("Unauthorized: Access token expired");
-      }
-      const err = await res.json();
-      throw new Error(err.message || "Cannot delete event");
-    }
-
-    return res.status;
+    return  res.status;
   } catch (e) {
     throw new Error(`Cannot delete event: ${e.message}`);
   }

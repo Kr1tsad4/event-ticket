@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
+import { logout } from "../utils/fetchAuthUtils";
 function NavigationBar() {
   const { user, setUser, setToken } = useContext(AuthContext);
   const navigator = useNavigate();
@@ -9,7 +10,8 @@ function NavigationBar() {
   const isHomePage = location.pathname.includes("/events");
   if (!user) return null;
 
-  const logout = () => {
+  const handleLogout = async () => {
+    await logout();
     setUser(null);
     setToken(null);
     sessionStorage.removeItem("login-user");
@@ -42,7 +44,7 @@ function NavigationBar() {
           <button>
             <p>Profile</p>
           </button>
-          <button onClick={logout} className="cursor-pointer">
+          <button onClick={() => handleLogout()} className="cursor-pointer">
             <p>Logout</p>
           </button>
         </div>

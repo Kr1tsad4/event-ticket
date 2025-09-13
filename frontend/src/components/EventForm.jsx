@@ -10,7 +10,6 @@ function EventForm({
   setDescription,
   setLocation,
   setStartDate,
-  setEndDate,
   setStartTime,
   setEndTime,
   setPrice,
@@ -18,7 +17,6 @@ function EventForm({
   startTime,
   endTime,
   startDate,
-  endDate,
   enableAddButton,
 }) {
   const navigator = useNavigate();
@@ -50,20 +48,14 @@ function EventForm({
             value={eventData.location}
             handleInput={(e) => setLocation(e)}
           />
-          <div className="flex gap-1">
-            <InputField
-              label="Start Date *"
-              type="date"
-              value={startDate}
-              handleInput={(e) => setStartDate(e)}
-            />
-            <InputField
-              label="End Date *"
-              type="date"
-              value={endDate}
-              handleInput={(e) => setEndDate(e)}
-            />
-          </div>
+
+          <InputField
+            label="Date *"
+            type="date"
+            value={startDate}
+            handleInput={(e) => setStartDate(e)}
+          />
+
           <div className="flex gap-1">
             <InputField
               label="Start Time *"

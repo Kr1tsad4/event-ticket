@@ -22,7 +22,7 @@ function AuthForm() {
   const [isResendVerificationEmail, setIsResendVerificationEmail] =
     useState(false);
   const [resendLoading, setResendLoading] = useState(false);
-  const { setUser,setToken } = useContext(AuthContext);
+  const { setUser, setToken } = useContext(AuthContext);
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
 
   const userData = {
@@ -60,8 +60,7 @@ function AuthForm() {
       sessionStorage.setItem("login-user", JSON.stringify(res.user));
       sessionStorage.setItem("access_token", res["access_token"]);
       setUser(res.user);
-      setToken(res["access_token"])
-    
+      setToken(res["access_token"]);
 
       if (res.user.role === "admin") {
         navigator("/admin");
@@ -81,7 +80,10 @@ function AuthForm() {
     try {
       const newUser = await register(userData);
       if (newUser.message) {
-        setEmailErrorMessage(newUser.message);
+        if (newUser.message.includes("email")) {
+          setEmailErrorMessage(newUser.message);
+        }
+
         return;
       }
       if (newUser) {

@@ -7,6 +7,7 @@ import {
 } from "../utils/fetchEventUtils";
 import socket from "../socket";
 import { useCallback } from "react";
+import { refreshToken } from "../utils/fetchAuthUtils";
 
 const EventContext = createContext();
 
@@ -30,13 +31,6 @@ export const EventProvider = ({ children }) => {
             day: "numeric",
           });
 
-          const endDate = end.toLocaleDateString("en-US", {
-            timeZone: "Asia/Bangkok",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          });
-
           const time = `${start.toLocaleTimeString("en-US", {
             timeZone: "Asia/Bangkok",
             hour: "2-digit",
@@ -52,7 +46,6 @@ export const EventProvider = ({ children }) => {
           return {
             ...e,
             date,
-            endDate,
             plainDate,
             time,
             ticketsAvailable,
@@ -69,26 +62,73 @@ export const EventProvider = ({ children }) => {
   }, []);
 
   const addEvent = async (event, token) => {
-    console.log(event);
-    const createdEvent = await createEvent(event, token);
-    if (createdEvent) {
-      setEvents((prev) => [...prev, createdEvent]);
+    const res = await createEvent(event, token);
+    if (res.status !== 201) {
+      if (res.status === 401) {
+        const refreshRes = await refreshToken();
+        if (refreshRes.status === 200) {
+          const newAccessToken = await refreshRes.newToken.json();
+          sessionStorage.setItem("access_token", newAccessToken);
+          const retryRes = await createEvent(event, newAccessToken);
+          if (retryRes.status === 200) {
+            fetchEvents();
+          }
+        }
+      } else {
+        console.error("Delete event failed:", res.status);
+      }
+      return;
     }
     fetchEvents();
   };
   const deleteEvent = async (id, token) => {
-    const deletedEvent = await deleteEventById(id, token);
-    if (deletedEvent) {
-      setEvents((prev) => prev.filter((e) => e._id !== id));
+    const res = await deleteEventById(id, token);
+    if (res !== 204) {
+      if (res === 401) {
+        const refreshRes = await refreshToken();
+        if (refreshRes.status === 200) {
+          const newAccessToken = await refreshRes.newToken.json();
+          sessionStorage.setItem("access_token", newAccessToken);
+          const retryRes = await deleteEventById(id, newAccessToken);
+          if (retryRes.status === 200) {
+            fetchEvents();
+          }
+        }
+      } else {
+        console.error("Delete event failed:", res);
+      }
+      return;
     }
+    fetchEvents();
   };
 
   const editEvent = async (id, event, token) => {
-    const updatedEvent = await updateEvent(id, event, token);
-    if (updatedEvent) {
-      fetchEvents();
+    const res = await updateEvent(id, event, token);
+    if (res.status !== 200) {
+      if (res.status === 401) {
+        const refreshRes = await refreshToken();
+        if (refreshRes.status === 200) {
+          const newAccessToken = await refreshRes.newToken.json();
+          sessionStorage.setItem("access_token", newAccessToken);
+
+          const retryRes = await updateEvent(
+            id,
+            event,
+            newAccessToken.access_token
+          );
+          if (retryRes.status === 200) {
+            fetchEvents();
+          }
+        }
+      } else {
+        console.error("Update event failed:", res.status);
+      }
+      return;
     }
+
+    fetchEvents();
   };
+
   const bookTicket = async (eventId, userId, quantity) => {
     socket.emit("book", {
       eventId: eventId,
