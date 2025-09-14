@@ -7,11 +7,13 @@ const {
   createEvent,
   updateEvent,
   deleteEvent,
-  bookEventTicket
+  bookEventTicket,
+  getUserBookedEvent
 } = require("../controllers/event-controller");
 
 router.get("/", getEvents);
 router.get("/:id", getEventById);
+router.get("/user/:id", getUserBookedEvent);
 router.post("/book-ticket", bookEventTicket);
 router.post("/", authMiddleware, createEvent);
 router.put("/:id", authMiddleware, updateEvent);

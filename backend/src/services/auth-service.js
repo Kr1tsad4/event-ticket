@@ -7,7 +7,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 const createError = require("http-errors");
 
 const register = async (user) => {
-  const { fullName, email, password } = user;
+  const { fullName, email, phoneNumber, dob, password } = user;
 
   const existingUser = await userService.findByEmail(email);
   if (existingUser) {
@@ -23,6 +23,8 @@ const register = async (user) => {
   const newUser = await userService.create({
     fullName: fullName,
     email: email,
+    phoneNumber: phoneNumber,
+    dob: dob,
     password: hashedPassword,
   });
 
@@ -50,6 +52,7 @@ const register = async (user) => {
 
 const login = async (email, password) => {
   const user = await userService.findByEmail(email);
+
   if (!user) {
     throw createError(404, "Account not found");
   }

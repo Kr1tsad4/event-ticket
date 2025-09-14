@@ -29,7 +29,14 @@ const deleteEvent = asyncHandler(async (req, res) => {
 const bookEventTicket = asyncHandler(async (req, res) => {
   const { eventId, userId } = req.body;
   const bookedTicket = await eventService.bookTicket(eventId, userId);
-  return res.status(201).json({ message: "Booked ticket successfully.",ticket:bookedTicket });
+  return res
+    .status(201)
+    .json({ message: "Booked ticket successfully.", ticket: bookedTicket });
+});
+
+const getUserBookedEvent = asyncHandler(async (req, res) => {
+  const events = await eventService.findUserBookedEventByUserId(req.params.id);
+  return res.status(200).json(events);
 });
 module.exports = {
   getEvents,
@@ -37,5 +44,6 @@ module.exports = {
   createEvent,
   deleteEvent,
   updateEvent,
-  bookEventTicket
+  bookEventTicket,
+  getUserBookedEvent
 };

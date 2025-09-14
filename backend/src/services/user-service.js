@@ -1,5 +1,4 @@
 const User = require("../models/user");
-const bcrypt = require("bcryptjs");
 const createError = require("http-errors");
 
 const findAll = async () => {
@@ -20,14 +19,14 @@ const findByEmail = async (email) => {
 };
 
 const create = async (user) => {
-  const { fullName, email, password,role } = user;
-  const hashedPassword = bcrypt.hashSync(password, 10);
+  const { fullName, email, password, phoneNumber, dob} = user;
 
   const newUser = await User.create({
     fullName,
     email,
-    password: hashedPassword,
-    role:role
+    password: password,
+    phoneNumber: phoneNumber,
+    dob: dob,
   });
 
   const newUserObj = newUser.toObject();
@@ -43,4 +42,4 @@ const deleteById = async (id) => {
   }
   await User.deleteOne(existingUser._id);
 };
-module.exports = { findAll, findById, create, findByEmail,deleteById };
+module.exports = { findAll, findById, create, findByEmail, deleteById };

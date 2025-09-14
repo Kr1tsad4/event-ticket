@@ -15,6 +15,18 @@ const findById = async (id) => {
   return existingEvent;
 };
 
+const findUserBookedEventByUserId = async (userId) => {
+  const user = await User.findById(userId).populate({
+    path: "bookedTickets",
+    select: "-__v",
+    populate: {
+      path: "event",
+      select: "-__v",
+    },
+  });
+
+  return user.bookedTickets;
+};
 const create = async (event) => {
   const newEvent = await Event.create(event);
   const newEventObj = newEvent.toObject();
@@ -37,7 +49,6 @@ const deleteById = async (id) => {
   }
   await Event.deleteOne(existingEvent._id);
 };
-
 const bookTicket = async (eventId, userId, quantity = 1) => {
   const event = await Event.findById(eventId);
   if (!event) throw createError(404, `Event not found with id ${eventId}`);
@@ -53,13 +64,17 @@ const bookTicket = async (eventId, userId, quantity = 1) => {
     );
   }
 
-  const ticket = await Ticket.create({
-    event: event._id,
-    bookedBy: user._id,
-    quantity,
-  });
+  let ticket = await Ticket.findOne({ event: event._id, bookedBy: user._id });
 
-  if (!user.bookedTickets.includes(ticket._id)) {
+  if (ticket) {
+    ticket.quantity += quantity;
+    await ticket.save();
+  } else {
+    ticket = await Ticket.create({
+      event: event._id,
+      bookedBy: user._id,
+      quantity,
+    });
     user.bookedTickets.push(ticket._id);
   }
 
@@ -70,4 +85,13 @@ const bookTicket = async (eventId, userId, quantity = 1) => {
   return ticket;
 };
 
-module.exports = { findAll, findById, create, deleteById, update, bookTicket };
+
+module.exports = {
+  findAll,
+  findById,
+  create,
+  deleteById,
+  update,
+  bookTicket,
+  findUserBookedEventByUserId,
+};
