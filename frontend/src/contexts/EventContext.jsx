@@ -3,6 +3,7 @@ import {
   createEvent,
   deleteEventById,
   getEvents,
+  getUserBookedEvent,
   updateEvent,
 } from "../utils/fetchEventUtils";
 import socket from "../socket";
@@ -56,6 +57,54 @@ export const EventProvider = ({ children }) => {
       }
     } catch (err) {
       console.error("Fetch events error:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchUserBookedEvent = useCallback(async (userId) => {
+    setLoading(true);
+    try {
+      const res = await getUserBookedEvent(userId);
+      if (res) {
+        const eventsWithDateTime = res.map((t) => {
+          const plainDate = t.event.startDateTime.split("T")[0];
+          const start = new Date(t.event.startDateTime);
+          const end = new Date(t.event.endDateTime);
+
+          const date = start.toLocaleDateString("en-US", {
+            timeZone: "Asia/Bangkok",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+
+          const time = `${start.toLocaleTimeString("en-US", {
+            timeZone: "Asia/Bangkok",
+            hour: "2-digit",
+            minute: "2-digit",
+          })} - ${end.toLocaleTimeString("en-US", {
+            timeZone: "Asia/Bangkok",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`;
+
+          return {
+            ...t, 
+            event: {
+              ...t.event,
+              date,
+              plainDate,
+              time,
+            },
+          };
+        });
+        return eventsWithDateTime; 
+      }
+      return [];
+    } catch (err) {
+      console.error("Fetch user booked events error:", err.message);
+      return [];
     } finally {
       setLoading(false);
     }
@@ -162,6 +211,7 @@ export const EventProvider = ({ children }) => {
         addEvent,
         editEvent,
         bookTicket,
+        fetchUserBookedEvent,
       }}
     >
       {children}

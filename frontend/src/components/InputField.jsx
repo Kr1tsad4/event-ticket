@@ -1,4 +1,4 @@
-function InputField({ type, placeholder, label, value, handleInput, className }) {
+function InputField({ type, placeholder, label, value, handleInput,handleOnBlur, className }) {
   return (
     <div className={`w-full ${className || ""}`}>
       <label className="block mb-2 font-medium text-sm md:text-base text-white ">{label}</label>
@@ -7,6 +7,7 @@ function InputField({ type, placeholder, label, value, handleInput, className })
         placeholder={placeholder}
         value={value}
         onChange={(e) => handleInput(e.target.value)}
+        onBlur={(e) => handleOnBlur(e.target.value)}
         className="w-full max-w-full bg-white/50 text-black md:max-w-[80vh] rounded-full px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500"
       />
     </div>

@@ -25,7 +25,8 @@ const login = async (user) => {
       },
       credentials: "include",
       body: JSON.stringify({
-        ...user,
+        email: user.email,       
+        password: user.password   
       }),
     });
     const data = await res.json();
@@ -34,6 +35,7 @@ const login = async (user) => {
     throw new Error("can not login");
   }
 };
+
 
 const logout = async () => {
   try {

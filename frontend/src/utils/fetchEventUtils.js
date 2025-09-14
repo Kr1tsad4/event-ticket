@@ -21,6 +21,18 @@ const getEventById = async (id) => {
     throw new Error("Can not get event");
   }
 };
+
+const getUserBookedEvent = async (userId) => {
+  try {
+    const res = await fetch(`${API_URL}/events/user/${userId}`);
+    const data = await res.json();
+
+    return data;
+  } catch (e) {
+    throw new Error("Can not get event");
+  }
+};
+
 const createEvent = async (event, token) => {
   try {
     const res = await fetch(`${API_URL}/events`, {
@@ -64,10 +76,17 @@ const deleteEventById = async (id, token) => {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    return  res.status;
+    return res.status;
   } catch (e) {
     throw new Error(`Cannot delete event: ${e.message}`);
   }
 };
 
-export { getEvents, getEventById, deleteEventById, createEvent, updateEvent };
+export {
+  getEvents,
+  getEventById,
+  deleteEventById,
+  createEvent,
+  updateEvent,
+  getUserBookedEvent,
+};

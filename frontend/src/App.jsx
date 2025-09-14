@@ -10,7 +10,8 @@ import EventListPage from "./pages/EventListPage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import AdminPage from "./pages/AdminPage";
 import { EventProvider } from "./contexts/EventContext";
-import BookingConfirmationModal from "./components/BookingConfirmationModal";
+import ProfilePage from "./pages/ProfilePage";
+import MyTicketPage from "./pages/MyTicketPage";
 
 function App() {
   return (
@@ -26,6 +27,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <EventListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/:id"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-tickets"
+            element={
+              <ProtectedRoute>
+                <MyTicketPage />
               </ProtectedRoute>
             }
           />
