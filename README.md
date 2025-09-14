@@ -24,8 +24,8 @@ Supports both **Admin** (event management) and **User** (ticket booking) roles.
 - Search & filter events (by date, location, category). :white_check_mark: 
 - View event details before booking. :white_check_mark:  
 - View booking history.
-- View and edit profile.
-  
+- View and edit profile. 
+- View booked tickets. :white_check_mark:
 ---
 
 ## 🏷️ Booking System
