@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../features/auth/stores/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
-import { logout } from "../utils/fetchAuthUtils";
+import { logout } from "../features/auth/services/fetchAuthUtils";
 function NavigationBar() {
   const { user, setUser, setToken } = useContext(AuthContext);
   const navigator = useNavigate();

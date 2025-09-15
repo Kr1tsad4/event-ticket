@@ -1,20 +1,19 @@
-import { useEvents } from "../contexts/EventContext";
-import NavigationBar from "../components/NavigationBar";
-import EventList from "../components/EventList";
-import { useEffect, useState } from "react";
-import { getEventById } from "../utils/fetchEventUtils";
+import NavigationBar from "@components/NavigationBar";
+import EventList from "@events/components/EventList";
+import { useEffect, useState, useContext } from "react";
+import { getEventById } from "@events/services/fetchEventUtils";
 import { useNavigate } from "react-router-dom";
-import BookingConfirmationModal from "../components/BookingConfirmationModal";
-import { AuthContext } from "../contexts/AuthContext";
-import { useContext } from "react";
+import BookingConfirmationModal from "@events/components/BookingConfirmationModal";
+import { AuthContext } from "@auth/stores/AuthContext";
+import { useEvent } from "@events/hooks/useEvent";
 
 function EventListPage() {
-  const { events, bookTicket } = useEvents();
+  const { events, bookTicket, fetchEvents } = useEvent(); 
   const [searchValues, setSearchValues] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [filterMinPrice, setFilterMinPrice] = useState(null);
-  const [filterMaxPrice, setFilterMaxPrice] = useState(null);
-  const [filterDate, setFilterDate] = useState(null);
+  const [filterMinPrice, setFilterMinPrice] = useState("");
+  const [filterMaxPrice, setFilterMaxPrice] = useState("");
+  const [filterDate, setFilterDate] = useState("");
   const [filterLocation, setFilterLocation] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const navigator = useNavigate();
@@ -70,8 +69,8 @@ function EventListPage() {
     }
   };
 
-  const confirmBookTicket = async (eventId,quantity) => {
-    await bookTicket(eventId, user._id,quantity);
+  const confirmBookTicket = async (eventId, quantity) => {
+    await bookTicket(eventId, user._id, quantity);
     setEventTicketToBook(null);
   };
 

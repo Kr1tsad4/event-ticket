@@ -1,21 +1,19 @@
-import AuthForm from "./auth/AuthForm";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import VerifyEmail from "./pages/VerifyEmail";
-import EventListPage from "./pages/EventListPage";
-import ProtectedRoute from "./auth/ProtectedRoute";
-import AdminPage from "./pages/AdminPage";
-import { EventProvider } from "./contexts/EventContext";
-import ProfilePage from "./pages/ProfilePage";
-import MyTicketPage from "./pages/MyTicketPage";
+import AuthForm from "@auth/pages/AuthForm";
+import VerifyEmail from "@auth/pages/VerifyEmailPage";
+import EventListPage from "@events/pages/EventListPage";
+import ProtectedRoute from "./ProtectedRoute";
+import AdminPage from "@users/pages/AdminPage";
+import ProfilePage from "@users/pages/ProfilePage";
+import MyTicketPage from "@events/pages/MyTicketPage";
 
 function App() {
   return (
-    <EventProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
@@ -72,7 +70,6 @@ function App() {
           />
         </Routes>
       </Router>
-    </EventProvider>
   );
 }
 

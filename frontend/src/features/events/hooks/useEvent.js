@@ -1,18 +1,15 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   createEvent,
   deleteEventById,
   getEvents,
   getUserBookedEvent,
   updateEvent,
-} from "../utils/fetchEventUtils";
-import socket from "../socket";
-import { useCallback } from "react";
-import { refreshToken } from "../utils/fetchAuthUtils";
+} from "@events/services/fetchEventUtils";
+import socket from "../../../socket";
+import { refreshToken } from "@auth/services/fetchAuthUtils";
 
-const EventContext = createContext();
-
-export const EventProvider = ({ children }) => {
+export const useEvent = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +20,7 @@ export const EventProvider = ({ children }) => {
       if (res) {
         const eventsWithDateTime = res.map((e) => {
           const plainDate = e.startDateTime.split("T")[0];
-          const start = new Date(plainDate + "T00:00:00");
+          const start = new Date(e.startDateTime);
           const end = new Date(e.endDateTime);
           const date = start.toLocaleDateString("en-US", {
             timeZone: "Asia/Bangkok",
@@ -31,7 +28,6 @@ export const EventProvider = ({ children }) => {
             month: "long",
             day: "numeric",
           });
-
           const time = `${start.toLocaleTimeString("en-US", {
             timeZone: "Asia/Bangkok",
             hour: "2-digit",
@@ -41,17 +37,10 @@ export const EventProvider = ({ children }) => {
             hour: "2-digit",
             minute: "2-digit",
           })}`;
-
           const ticketsAvailable = e.ticketCapacity - e.ticketBooked;
-          const isSoldOut = e.ticketCapacity - e.ticketBooked <= 0;
-          return {
-            ...e,
-            date,
-            plainDate,
-            time,
-            ticketsAvailable,
-            isSoldOut,
-          };
+          const isSoldOut = ticketsAvailable <= 0;
+
+          return { ...e, date, plainDate, time, ticketsAvailable, isSoldOut };
         });
         setEvents(eventsWithDateTime);
       }
@@ -78,7 +67,6 @@ export const EventProvider = ({ children }) => {
             month: "long",
             day: "numeric",
           });
-
           const time = `${start.toLocaleTimeString("en-US", {
             timeZone: "Asia/Bangkok",
             hour: "2-digit",
@@ -90,16 +78,11 @@ export const EventProvider = ({ children }) => {
           })}`;
 
           return {
-            ...t, 
-            event: {
-              ...t.event,
-              date,
-              plainDate,
-              time,
-            },
+            ...t,
+            event: { ...t.event, date, plainDate, time },
           };
         });
-        return eventsWithDateTime; 
+        return eventsWithDateTime;
       }
       return [];
     } catch (err) {
@@ -119,17 +102,14 @@ export const EventProvider = ({ children }) => {
           const newAccessToken = await refreshRes.newToken.json();
           sessionStorage.setItem("access_token", newAccessToken);
           const retryRes = await createEvent(event, newAccessToken);
-          if (retryRes.status === 200) {
-            fetchEvents();
-          }
+          if (retryRes.status === 200) fetchEvents();
         }
-      } else {
-        console.error("Delete event failed:", res.status);
-      }
+      } else console.error("Add event failed:", res.status);
       return;
     }
     fetchEvents();
   };
+
   const deleteEvent = async (id, token) => {
     const res = await deleteEventById(id, token);
     if (res !== 204) {
@@ -139,13 +119,9 @@ export const EventProvider = ({ children }) => {
           const newAccessToken = await refreshRes.newToken.json();
           sessionStorage.setItem("access_token", newAccessToken);
           const retryRes = await deleteEventById(id, newAccessToken);
-          if (retryRes.status === 200) {
-            fetchEvents();
-          }
+          if (retryRes.status === 200) fetchEvents();
         }
-      } else {
-        console.error("Delete event failed:", res);
-      }
+      } else console.error("Delete event failed:", res);
       return;
     }
     fetchEvents();
@@ -159,64 +135,37 @@ export const EventProvider = ({ children }) => {
         if (refreshRes.status === 200) {
           const newAccessToken = await refreshRes.newToken.json();
           sessionStorage.setItem("access_token", newAccessToken);
-
-          const retryRes = await updateEvent(
-            id,
-            event,
-            newAccessToken.access_token
-          );
-          if (retryRes.status === 200) {
-            fetchEvents();
-          }
+          const retryRes = await updateEvent(id, event, newAccessToken);
+          if (retryRes.status === 200) fetchEvents();
         }
-      } else {
-        console.error("Update event failed:", res.status);
-      }
+      } else console.error("Update event failed:", res.status);
       return;
     }
-
     fetchEvents();
   };
 
   const bookTicket = async (eventId, userId, quantity) => {
-    socket.emit("book", {
-      eventId: eventId,
-      userId: userId,
-      quantity: quantity,
-    });
+    socket.emit("book", { eventId, userId, quantity });
   };
 
   useEffect(() => {
-    const handleBookedTicket = () => {
-      fetchEvents();
-    };
-
+    const handleBookedTicket = () => fetchEvents();
     socket.on("booked-ticket", handleBookedTicket);
-    return () => {
-      socket.off("booked-ticket", handleBookedTicket);
-    };
-  }, []);
+    return () => socket.off("booked-ticket", handleBookedTicket);
+  }, [fetchEvents]);
 
   useEffect(() => {
     fetchEvents();
   }, [fetchEvents]);
 
-  return (
-    <EventContext.Provider
-      value={{
-        events,
-        fetchEvents,
-        loading,
-        deleteEvent,
-        addEvent,
-        editEvent,
-        bookTicket,
-        fetchUserBookedEvent,
-      }}
-    >
-      {children}
-    </EventContext.Provider>
-  );
+  return {
+    events,
+    loading,
+    fetchEvents,
+    fetchUserBookedEvent,
+    addEvent,
+    editEvent,
+    deleteEvent,
+    bookTicket,
+  };
 };
-
-export const useEvents = () => useContext(EventContext);

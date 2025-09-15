@@ -1,5 +1,5 @@
 import { useState } from "react";
-import InputField from "../components/InputField";
+import InputField from "@components/InputField";
 import { IoIosArrowRoundBack } from "react-icons/io";
 function RegisterForm({
   userData,

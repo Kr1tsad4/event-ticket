@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import NavigationBar from "../components/NavigationBar";
-import TicketCard from "../components/TicketCard";
-import { AuthContext } from "../contexts/AuthContext";
-import { useEvents } from "../contexts/EventContext";
+import NavigationBar from "@components/NavigationBar";
+import TicketCard from "@events/components/TicketCard";
+import { AuthContext } from "@auth/stores/AuthContext";
+import { useEvent } from "@events/hooks/useEvent";
 
 function MyTicketPage() {
   const { user } = useContext(AuthContext);
   const [userBookedEvent, setUserBookedEvent] = useState();
-  const { fetchUserBookedEvent } = useEvents();
+  const { fetchUserBookedEvent } = useEvent();
   useEffect(() => {
     const fetchBookedEvent = async () => {
       const res = await fetchUserBookedEvent(user._id);

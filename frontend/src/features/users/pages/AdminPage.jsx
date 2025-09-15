@@ -1,14 +1,14 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
-import NavigationBar from "../components/NavigationBar";
-import { useEvents } from "../contexts/EventContext";
+import { useContext, useState } from "react";
+import { AuthContext } from "@auth/stores/AuthContext";
+import NavigationBar from "@components/NavigationBar";
+import { useEvent } from "@events/hooks/useEvent";
 import { useNavigate, useLocation } from "react-router-dom";
-import EventForm from "../components/EventForm";
-import { getEventById } from "../utils/fetchEventUtils";
+import EventForm from "@events/components/EventForm";
+import { getEventById } from "@events/services/fetchEventUtils";
 
 function AdminPage() {
   const { token } = useContext(AuthContext);
-  const { events, loading, deleteEvent, addEvent, editEvent } = useEvents();
+  const { events, loading, deleteEvent, addEvent, editEvent } = useEvent(); 
   const navigator = useNavigate();
   const locations = useLocation();
   const isOpenAddForm = locations.pathname.includes("/admin/event/add");
@@ -24,20 +24,20 @@ function AdminPage() {
   const [ticketCapacity, setTicketCapacity] = useState(null);
   const [idToEdit, setIdToEdit] = useState(null);
   const [eventToDelete, setEventToDelete] = useState(null);
-  const [isOpenDeleteConfirmation, setIsOpenDeleteConfirmation] =
-    useState(false);
+  const [isOpenDeleteConfirmation, setIsOpenDeleteConfirmation] = useState(false);
+
   if (loading) {
     return <div>Loading events...</div>;
   }
-  
-  let eventData = {
-    title: title,
-    description: description,
-    location: location,
+
+  const eventData = {
+    title,
+    description,
+    location,
     startDateTime: `${startDate}T${startTime}:00Z`,
     endDateTime: `${startDate}T${endTime}:00Z`,
-    price: price,
-    ticketCapacity: ticketCapacity,
+    price,
+    ticketCapacity,
   };
 
   const clearForm = () => {
@@ -66,8 +66,7 @@ function AdminPage() {
     setIdToEdit(id);
     try {
       const event = await getEventById(id);
-
-      const startDate = `${event.startDateTime.split("T")[0]}`;
+      const startDate = event.startDateTime.split("T")[0];
       const startTime = event.startDateTime.split("T")[1].slice(0, 5);
       const endTime = event.endDateTime.split("T")[1].slice(0, 5);
       setTitle(event.title);

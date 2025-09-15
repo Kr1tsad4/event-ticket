@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { verifyEmail } from "../utils/fetchAuthUtils";
-import { AuthContext } from "../contexts/AuthContext";
+import { verifyEmail } from "@auth/services/fetchAuthUtils";
+import { AuthContext } from "@auth/stores/AuthContext";
 import { useContext } from "react";
 function VerifyEmail() {
   const [message, setMessage] = useState("Verifying...");

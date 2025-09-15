@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "@auth/stores/AuthContext";
 
 function TicketCard({ userBookedEvent = [] }) {
   const { user } = useContext(AuthContext);

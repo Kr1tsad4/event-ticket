@@ -5,11 +5,11 @@ import {
   login,
   register,
   resendVerificationEmail,
-} from "../utils/fetchAuthUtils";
-import { AuthContext } from "../contexts/AuthContext";
-import LoginForm from "../components/LoginForm";
-import RegisterForm from "../components/RegisterForm";
-import VerifyEmail from "./VerifyEmail";
+} from "@auth/services/fetchAuthUtils";
+import { AuthContext } from "@auth/stores/AuthContext";
+import LoginForm from "@auth/components/LoginForm";
+import RegisterForm from  "@auth/components/RegisterForm";
+import VerifyEmail from "@auth/components/VerifyEmail";
 
 function AuthForm() {
   const navigator = useNavigate();
