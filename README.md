@@ -1,4 +1,4 @@
-# 🎟️ Event Booking & Ticketing System (Work in Progress)
+# 🎟️ Event Booking & Ticketing System 
 
 A web application for managing events and booking tickets.  
 Supports both **Admin** (event management) and **User** (ticket booking) roles.
@@ -6,7 +6,7 @@ Supports both **Admin** (event management) and **User** (ticket booking) roles.
 ---
 
 ## 🔑 Authentication & User Management
-- User registration & login with role-based access (Admin / User). :white_check_mark:
+- User registration & login with role-based access (Admin / User). 
   
 - Role definitions:
   - **Admin**: Create & manage events. 
@@ -16,22 +16,22 @@ Supports both **Admin** (event management) and **User** (ticket booking) roles.
 
 ## 🎤 Event Management
 ### Admin Features
-- CRUD operations for events (title, date & time, location, price, ticket capacity). :white_check_mark: 
-- Track number of booked tickets in real time. :white_check_mark: 
+- CRUD operations for events (title, date & time, location, price, ticket capacity). 
+- Track number of booked tickets in real time. 
 
 ### User Features
-- View a list of available events. :white_check_mark: 
-- Search & filter events (by date, location, category). :white_check_mark: 
-- View event details before booking. :white_check_mark:  
+- View a list of available events. 
+- Search & filter events (by date, location, category). 
+- View event details before booking. 
 - View booking history.
 - View and edit profile. 
-- View booked tickets. :white_check_mark:
+- View booked tickets.
 ---
 
 ## 🏷️ Booking System
-- Ticket booking with automatic deduction from event capacity. :white_check_mark: 
-- Booking confirmation. :white_check_mark: 
-- Real-time updates when tickets are sold out. :white_check_mark: 
+- Ticket booking with automatic deduction from event capacity. 
+- Booking confirmation.  
+- Real-time updates when tickets are sold out. 
 
 ---
 
