@@ -19,7 +19,7 @@ const findByEmail = async (email) => {
 };
 
 const create = async (user) => {
-  const { fullName, email, password, phoneNumber, dob} = user;
+  const { fullName, email, password, phoneNumber, dob } = user;
 
   const newUser = await User.create({
     fullName,
@@ -35,6 +35,22 @@ const create = async (user) => {
   return newUser;
 };
 
+const update = async (id, user) => {
+  const { fullName } = user;
+
+  const updatedUser = await User.findOneAndUpdate(
+    { _id: id },
+    { fullName },
+    { new: true }
+  );
+
+  if (!updatedUser) {
+    throw createError(404, `User not found with id ${id}`);
+  }
+
+  return updatedUser;
+};
+
 const deleteById = async (id) => {
   const existingUser = await User.findById(id);
   if (!existingUser) {
@@ -42,4 +58,4 @@ const deleteById = async (id) => {
   }
   await User.deleteOne(existingUser._id);
 };
-module.exports = { findAll, findById, create, findByEmail, deleteById };
+module.exports = { findAll, findById, create, findByEmail, deleteById, update };
