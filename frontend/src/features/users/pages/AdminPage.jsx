@@ -107,9 +107,6 @@ function AdminPage() {
     <div className="bg-white text-black h-screen pt-20">
       <NavigationBar />
       <div className="relative bg-white">
-        <div className="m-10">
-          <h1 className="text-2xl font-bold mb-5">Dashboard</h1>
-        </div>
         {(isOpenAddForm || isOpenEditForm) && (
           <div className="fixed inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm z-50">
             <EventForm

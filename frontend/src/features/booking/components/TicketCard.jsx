@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "@auth/stores/AuthContext";
 
-function TicketCard({ userBookedEvent = [] }) {
+function TicketCard({ userBookedEvent = []}) {
   const { user } = useContext(AuthContext);
 
   if (!userBookedEvent) {

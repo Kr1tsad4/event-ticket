@@ -15,6 +15,7 @@ function MyTicketPage() {
     };
     fetchBookedEvent();
   }, []);
+
   return (
     <div className="bg-white text-black min-h-screen pt-20">
       <NavigationBar />
