@@ -1,14 +1,27 @@
 import { useContext } from "react";
 import { AuthContext } from "@auth/stores/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-function TicketCard({ userBookedEvent = []}) {
+function TicketCard({ userBookedEvent = [] }) {
   const { user } = useContext(AuthContext);
-
-  if (!userBookedEvent) {
-    return <p className="m-8 text-gray-500">No tickets found.</p>;
+  const navigator = useNavigate();
+  if (!userBookedEvent || userBookedEvent.length === 0) {
+    return (
+      <div className="w-full flex justify-center items-center">
+        <p className="m-8 text-gray-500 text-xl mt-10">
+          No tickets found.{" "}
+          <button
+            className="cursor-pointer"
+            onClick={() => navigator("/events")}
+          >
+            <span className="text-blue-500 underline">explore now</span>
+          </button>
+        </p>
+      </div>
+    );
   }
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-3 gap-3 max-sm:grid-cols-1 max-lg:grid-cols-2">
       {userBookedEvent.map((ticket, index) => (
         <div
           key={ticket._id || index}
@@ -17,7 +30,8 @@ function TicketCard({ userBookedEvent = []}) {
           <div className="space-y-1">
             <h1 className="text-2xl font-bold pb-1">{ticket.event.title}</h1>
             <p className="text-sm text-gray-600">
-              <span className="font-semibold text-[16px]">Name: </span> {user.fullName}
+              <span className="font-semibold text-[16px]">Name: </span>{" "}
+              {user.fullName}
             </p>
             <p className="text-sm text-gray-600">
               <span className="font-semibold">Date: </span> {ticket.event.date}

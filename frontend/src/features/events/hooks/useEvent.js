@@ -149,7 +149,11 @@ export const useEvent = () => {
   };
 
   useEffect(() => {
-    const handleBookedTicket = () => fetchEvents();
+    const handleBookedTicket = () => {
+      setTimeout(() => {
+        fetchEvents();
+      }, 1000);
+    };
     socket.on("booked-ticket", handleBookedTicket);
     return () => socket.off("booked-ticket", handleBookedTicket);
   }, [fetchEvents]);

@@ -5,10 +5,11 @@ import { useEvent } from "@events/hooks/useEvent";
 import { useNavigate, useLocation } from "react-router-dom";
 import EventForm from "@events/components/EventForm";
 import { getEventById } from "@events/services/fetchEventUtils";
+import Charts from "../components/Charts";
 
 function AdminPage() {
   const { token } = useContext(AuthContext);
-  const { events, loading, deleteEvent, addEvent, editEvent } = useEvent(); 
+  const { events, loading, deleteEvent, addEvent, editEvent } = useEvent();
   const navigator = useNavigate();
   const locations = useLocation();
   const isOpenAddForm = locations.pathname.includes("/admin/event/add");
@@ -24,11 +25,8 @@ function AdminPage() {
   const [ticketCapacity, setTicketCapacity] = useState(null);
   const [idToEdit, setIdToEdit] = useState(null);
   const [eventToDelete, setEventToDelete] = useState(null);
-  const [isOpenDeleteConfirmation, setIsOpenDeleteConfirmation] = useState(false);
-
-  if (loading) {
-    return <div>Loading events...</div>;
-  }
+  const [isOpenDeleteConfirmation, setIsOpenDeleteConfirmation] =
+    useState(false);
 
   const eventData = {
     title,
@@ -102,7 +100,7 @@ function AdminPage() {
       !!price
     );
   };
-  
+
   return (
     <div className="bg-white text-black h-screen pt-20">
       <NavigationBar />
@@ -158,70 +156,76 @@ function AdminPage() {
             </div>
           </div>
         )}
-
+        <div className="m-10">
+          <h1 className="text-2xl font-bold mb-5">Dashboard</h1>
+          <Charts events={events} />
+        </div>
         <div className="m-10">
           <h1 className="text-2xl font-bold mb-5">Event Management</h1>
           <button
             className="btn btn-primary py-1 mb-5"
             onClick={() => navigator("/admin/event/add")}
           >
-            Add Event
+            New Event
           </button>
-          <table className="table-auto border-collapse border font-semibold border-gray-200 w-full text-left">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className=" px-2 py-3">Title</th>
-                <th className=" px-4 py-2">Location</th>
-                <th className=" px-2 py-2">Date</th>
-                <th className=" px-2 py-2">Time</th>
-                <th className=" px-[2px] py-2">Tickets</th>
-                <th className="  py-2">Booked</th>
-                <th className="  py-2">Available</th>
-                <th className=" px-4 py-2">Price</th>
-                <th className=" px-2 py-2">Actions</th>
-              </tr>
-            </thead>
+          <div className="overflow-x-auto">
+            <table className="table-auto min-w-full border-collapse border-gray-200"></table>
+            <table className="table-auto border-collapse border font-semibold border-gray-200 w-full text-left">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className=" px-2 py-3">Title</th>
+                  <th className=" px-4 py-2">Location</th>
+                  <th className=" px-2 py-2">Date</th>
+                  <th className=" px-2 py-2">Time</th>
+                  <th className=" px-[2px] py-2">Tickets</th>
+                  <th className="  py-2">Booked</th>
+                  <th className="  py-2">Available</th>
+                  <th className=" px-4 py-2">Price</th>
+                  <th className=" px-2 py-2">Actions</th>
+                </tr>
+              </thead>
 
-            <tbody>
-              {events.length > 0 ? (
-                events.map((event) => (
-                  <tr key={event._id}>
-                    <td className="px-2 py-2">{event.title}</td>
-                    <td className="px-4 py-2">{event.location}</td>
-                    <td className="px-2 py-2">{event.date}</td>
-                    <td className="px-2 py-2">{event.time}</td>
-                    <td className="py-2">{event.ticketCapacity}</td>
-                    <td className="py-2">{event.ticketBooked}</td>
-                    <td className="py-2">{event.ticketsAvailable}</td>
-                    <td className="px-4 py-2">{event.price} ฿</td>
+              <tbody>
+                {events.length > 0 ? (
+                  events.map((event) => (
+                    <tr key={event._id}>
+                      <td className="px-2 py-2">{event.title}</td>
+                      <td className="px-4 py-2">{event.location}</td>
+                      <td className="px-2 py-2">{event.date}</td>
+                      <td className="px-2 py-2">{event.time}</td>
+                      <td className="py-2">{event.ticketCapacity}</td>
+                      <td className="py-2">{event.ticketBooked}</td>
+                      <td className="py-2">{event.ticketsAvailable}</td>
+                      <td className="px-4 py-2">{event.price} ฿</td>
 
-                    <td className="px-2 py-2">
-                      <button
-                        className="btn btn-sm btn-primary mr-2"
-                        onClick={() => openEditForm(event._id)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-sm btn-error text-white"
-                        onClick={() =>
-                          openDeleteConfirmationPopup(event._id, event.title)
-                        }
-                      >
-                        Delete
-                      </button>
+                      <td className="px-2 py-2">
+                        <button
+                          className="btn btn-sm btn-primary mr-2"
+                          onClick={() => openEditForm(event._id)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="btn btn-sm btn-error text-white"
+                          onClick={() =>
+                            openDeleteConfirmationPopup(event._id, event.title)
+                          }
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={7} className="text-center w-full py-5 ">
+                      No events found
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={7} className="text-center w-full py-5 ">
-                    No events found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

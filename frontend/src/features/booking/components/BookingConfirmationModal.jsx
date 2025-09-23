@@ -28,7 +28,6 @@ function BookingConfirmationModal({
       minute: "2-digit",
     })}`;
   };
-
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(eventTicketToBook.price);
 
@@ -69,15 +68,15 @@ function BookingConfirmationModal({
             <span>{eventTicketToBook.price.toLocaleString()} ฿</span>
           </div>
           <div className="flex justify-between">
-            <span className="font-semibold">Available Tickets :</span>
+            <span className="font-semibold">Available Ticket(s) :</span>
             <span>
               {eventTicketToBook.ticketCapacity -
                 eventTicketToBook.ticketBooked}{" "}
               / {eventTicketToBook.ticketCapacity}
             </span>
           </div>
-          <div className="flex justify-between items-center gap-2">
-            <span className="font-semibold">Number of Tickets:</span>
+          <div className="flex justify-between">
+            <span className="font-semibold">Number of Ticket(s) :</span>
             <input
               type="number"
               min={1}
@@ -86,10 +85,19 @@ function BookingConfirmationModal({
                 eventTicketToBook.ticketBooked
               }
               value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
+              onChange={(e) => {
+                let val = Number(e.target.value);
+                const available =
+                  eventTicketToBook.ticketCapacity -
+                  eventTicketToBook.ticketBooked;
+                if (val > available) val = available;
+                if (val < 1) val = 1;
+                setQuantity(val);
+              }}
               className="border rounded px-2 py-1 w-20"
             />
           </div>
+
           <div className="flex justify-between items-center gap-2">
             <span className="font-semibold">Total:</span>
             <span>{total.toLocaleString()} ฿</span>
@@ -104,7 +112,7 @@ function BookingConfirmationModal({
             Cancel
           </button>
           <button
-            onClick={() => confirmBookTicket(eventTicketToBook._id,quantity)}
+            onClick={() => confirmBookTicket(eventTicketToBook._id, quantity)}
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 cursor-pointer font-semibold"
           >
             Confirm Booking

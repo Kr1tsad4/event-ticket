@@ -8,7 +8,7 @@ import {
 } from "@auth/services/fetchAuthUtils";
 import { AuthContext } from "@auth/stores/AuthContext";
 import LoginForm from "@auth/components/LoginForm";
-import RegisterForm from  "@auth/components/RegisterForm";
+import RegisterForm from "@auth/components/RegisterForm";
 import VerifyEmail from "@auth/components/VerifyEmail";
 
 function AuthForm() {
@@ -94,8 +94,8 @@ function AuthForm() {
         return;
       }
       if (newUser) {
-        setIsVerify(true);
         localStorage.setItem("signup-user", JSON.stringify(newUser));
+        setIsVerify(true);
       }
     } catch (err) {
       console.log(err);
@@ -119,7 +119,7 @@ function AuthForm() {
 
   useEffect(() => {
     setIsVerify(false);
-  });
+  }, []);
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 via-purple-500 px-4 text-white">
       <div className="w-full max-w-md md:max-w-lg bg-black/70 flex flex-col justify-center gap-5 rounded-xl p-6 md:p-8">

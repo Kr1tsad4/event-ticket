@@ -6,7 +6,7 @@ import { useEvent } from "@events/hooks/useEvent";
 
 function MyTicketPage() {
   const { user } = useContext(AuthContext);
-  const [userBookedEvent, setUserBookedEvent] = useState();
+  const [userBookedEvent, setUserBookedEvent] = useState([]);
   const { fetchUserBookedEvent } = useEvent();
   useEffect(() => {
     const fetchBookedEvent = async () => {

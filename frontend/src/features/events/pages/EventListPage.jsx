@@ -8,7 +8,7 @@ import { AuthContext } from "@auth/stores/AuthContext";
 import { useEvent } from "@events/hooks/useEvent";
 
 function EventListPage() {
-  const { events, bookTicket, fetchEvents } = useEvent(); 
+  const { events, bookTicket, fetchEvents } = useEvent();
   const [searchValues, setSearchValues] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [filterMinPrice, setFilterMinPrice] = useState("");
@@ -77,7 +77,7 @@ function EventListPage() {
   return (
     <div className="bg-white min-h-screen text-black pb-15 pt-20">
       <NavigationBar />
-      <div className="mt-10 ml-25 mr-25">
+      <div className="mt-10 ml-25 mr-25 max-sm:m-2">
         <h1 className="text-4xl font-semibold mb-6">Event Listings</h1>
         <div className="flex flex-wrap gap-2 w-full items-center mb-5">
           <input
@@ -85,27 +85,30 @@ function EventListPage() {
             placeholder="Search events"
             value={searchValues}
             onChange={(e) => setSearchValues(e.target.value)}
-            className="flex-1 px-4 py-2 border bg-gray-300 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
+            className="flex-1 min-w-[150px] px-4 py-2 border bg-gray-300 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
           />
+
           <input
-            type="Number"
+            type="number"
             placeholder="Price lower"
             value={filterMinPrice ?? ""}
             onChange={(e) => setFilterMinPrice(e.target.value)}
-            className="w-1/8 px-4 py-2 border bg-gray-300 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-24 sm:w-32 md:w-36 px-4 py-2 border bg-gray-300 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
           />
+
           <input
-            type="Number"
+            type="number"
             placeholder="Price upper"
             value={filterMaxPrice ?? ""}
             onChange={(e) => setFilterMaxPrice(e.target.value)}
-            className="w-1/8  px-4 py-2 border bg-gray-300 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-24 sm:w-32 md:w-36 px-4 py-2 border bg-gray-300 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
           />
+
           <input
-            type="Date"
+            type="date"
             value={filterDate ?? ""}
             onChange={(e) => setFilterDate(e.target.value)}
-            className="w-1/8 bg-gray-300  px-4 py-2 border text-gray-500 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-32 md:w-36 bg-gray-300 px-4 py-2 border text-gray-500 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
           />
 
           <input
@@ -113,22 +116,25 @@ function EventListPage() {
             placeholder="Search location"
             value={filterLocation}
             onChange={(e) => setFilterLocation(e.target.value)}
-            className="px-4 py-2 border bg-gray-300 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-32 sm:w-40 md:w-48 px-4 py-2 border bg-gray-300 border-gray-300 shadow rounded-md focus:ring-2 focus:ring-blue-500"
           />
+
           <button
             onClick={handleSearch}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
             disabled={!enableSearch()}
           >
             Search
           </button>
+
           <button
             onClick={clearFilter}
-            className="px-4 py-2 btn btn-error text-white rounded-md hover:bg-gray-600"
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
           >
             Clear
           </button>
         </div>
+
         {isSearching && (
           <p className="text-gray-500 mb-3">
             Found {filteredEvents.length} event(s)
