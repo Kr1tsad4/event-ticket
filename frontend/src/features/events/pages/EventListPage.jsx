@@ -3,7 +3,7 @@ import EventList from "@events/components/EventList";
 import { useEffect, useState, useContext } from "react";
 import { getEventById } from "@events/services/fetchEventUtils";
 import { useNavigate } from "react-router-dom";
-import BookingConfirmationModal from "@events/components/BookingConfirmationModal";
+import BookingConfirmationModal from "@booking/components/BookingConfirmationModal";
 import { AuthContext } from "@auth/stores/AuthContext";
 import { useEvent } from "@events/hooks/useEvent";
 

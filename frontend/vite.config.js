@@ -13,6 +13,7 @@ export default defineConfig({
       "@auth": path.resolve(__dirname, "src/features/auth"),
       "@events": path.resolve(__dirname, "src/features/events"),
       "@users": path.resolve(__dirname, "src/features/users"),
+      "@booking": path.resolve(__dirname, "src/features/booking"),
       "@stores": path.resolve(__dirname, "src/features"), 
       "@services": path.resolve(__dirname, "src/features"), 
     },

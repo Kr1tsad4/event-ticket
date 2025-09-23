@@ -10,7 +10,7 @@ import EventListPage from "@events/pages/EventListPage";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminPage from "@users/pages/AdminPage";
 import ProfilePage from "@users/pages/ProfilePage";
-import MyTicketPage from "@events/pages/MyTicketPage";
+import MyTicketPage from "@booking/pages/MyTicketPage";
 
 function App() {
   return (

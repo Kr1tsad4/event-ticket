@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import NavigationBar from "@components/NavigationBar";
-import TicketCard from "@events/components/TicketCard";
+import TicketCard from "@booking/components/TicketCard";
 import { AuthContext } from "@auth/stores/AuthContext";
 import { useEvent } from "@events/hooks/useEvent";
 
