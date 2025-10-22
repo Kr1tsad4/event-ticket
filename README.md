@@ -52,10 +52,3 @@ Supports both **Admin** (event management) and **User** (ticket booking) roles.
 - Payment integration.
 - QR code for digital ticket check-in.
 
----
-## 🧪 Test Account
-
-**User Account**
-- Username: test@gmail.com
-- Password: testuser
-
